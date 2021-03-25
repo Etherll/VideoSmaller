@@ -83,6 +83,7 @@ class Ui_MainWindow(object):
         self.worker = FFMEG_Worker()
         self.worker.filename = self.textEdit.toPlainText()
         self.worker.noAudio = self.checkBox.isChecked()
+        self.worker.bitrate = os.path.getsize(self.textEdit.toPlainText())/4.2
         self.worker.start()
         self.worker.finished.connect(self.worker_finished)
     def worker_finished(self):
@@ -110,13 +111,15 @@ class Ui_MainWindow(object):
 class FFMEG_Worker(QtCore.QThread):
     filename = None
     noAudio=False
-
+    bitrate = None
+    
     def run(self):
         if self.noAudio:
             os.system(
-                f'ffmpeg -i "{self.filename}" -an -c:v libx264 -b:v 2M -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
+                f'ffmpeg -i "{self.filename}" -an -c:v libx264 -b:v {self.bitrate} -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
             return
-        os.system(f'ffmpeg -i "{self.filename}" -c:v libx264 -b:v 2M -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
+        os.system(f'ffmpeg -i "{self.filename}" -c:v libx264 -b:v {self.bitrate} -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
+        print(self.bitrate)
 
 if __name__ == "__main__":
     import sys
