@@ -16,7 +16,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(579, 256)
-        MainWindow.setStyleSheet("background-color: rgb(7, 7, 22);")
+        MainWindow.setStyleSheet("background-color: rgb(7, 7, 22);\n")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
@@ -84,6 +84,18 @@ class Ui_MainWindow(object):
         self.worker.filename = self.textEdit.toPlainText()
         self.worker.noAudio = self.checkBox.isChecked()
         self.worker.start()
+        self.worker.finished.connect(self.worker_finished)
+    def worker_finished(self):
+        old_size = os.path.getsize(self.textEdit.toPlainText()) *1000
+        filepath = self.textEdit.toPlainText()
+        filename = filepath.split(r"/")[-1]
+        new_size =  os.path.getsize(f'{filepath[:-len(filename)]}{filename.split(".")[0]}_smaller.mp4') *1000
+        message = QtWidgets.QMessageBox()
+        message.setStyleSheet('color: rgb(255, 255, 255);\n'
+                              "background-color: rgb(7, 7, 22);\n")
+        message.setWindowTitle('Done!')
+        message.setText(f"{str(old_size)[:1]+'.'+str(old_size)[1:3]} --> {str(new_size)[:1]+'.'+str(new_size)[1:3]}")
+        message.exec_()
     def OpenDiscord(self):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl('https://discord.gg/3pP7pDAccn'))
 
