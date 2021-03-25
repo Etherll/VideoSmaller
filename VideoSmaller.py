@@ -89,7 +89,7 @@ class Ui_MainWindow(object):
         old_size = os.path.getsize(self.textEdit.toPlainText()) *1000
         filepath = self.textEdit.toPlainText()
         filename = filepath.split(r"/")[-1]
-        new_size =  os.path.getsize(f'{filepath[:-len(filename)]}{filename.split(".")[0]}_smaller.mp4') *1000
+        new_size =  os.path.getsize(f'{os.getcwd()}/{filename.split(".")[0]}_smaller.mp4') *1000
         message = QtWidgets.QMessageBox()
         message.setStyleSheet('color: rgb(255, 255, 255);\n'
                               "background-color: rgb(7, 7, 22);\n")
@@ -114,9 +114,9 @@ class FFMEG_Worker(QtCore.QThread):
     def run(self):
         if self.noAudio:
             os.system(
-                f'ffmpeg -i "{self.filename}" -an -c:v libx264 -b:v 1m -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
+                f'ffmpeg -i "{self.filename}" -an -c:v libx264 -b:v 2M -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
             return
-        os.system(f'ffmpeg -i "{self.filename}" -c:v libx264 -b:v 1m -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
+        os.system(f'ffmpeg -i "{self.filename}" -c:v libx264 -b:v 2M -y "{self.filename.split(r"/")[-1].split(".")[0]}_smaller.mp4"')
 
 if __name__ == "__main__":
     import sys
