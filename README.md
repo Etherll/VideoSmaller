@@ -1,4 +1,4 @@
-# VedioSmaller
+# VideoSmaller
 simple vedio smaller using pyqt5
 
 
